@@ -86,7 +86,7 @@ export function DeskApp() {
     document.getElementById("live-slip")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [alertId]);
 
-  const clock = book.now > 0 ? book.now : Date.now();
+  const clock = book.now;
   const next4h = nextAt(clock, (t) => new Date(t).getUTCHours() % 4 === 0);
   const nextDay = nextAt(clock, (t) => new Date(t).getUTCHours() === 0);
   const nextSun = (() => {
@@ -120,14 +120,20 @@ export function DeskApp() {
           </div>
         </div>
         <div className="mx-auto flex max-w-6xl gap-4 overflow-x-auto px-4 pb-3 text-xs text-muted sm:px-6">
-          <span className="shrink-0 tabular-nums text-ink">{book.now > 0 ? fmtWhen(book.now) : "Waiting for the hour"}</span>
-          <span className="shrink-0 tabular-nums">
-            {checkedAt ? `Checked ${new Date(checkedAt).toISOString().slice(11, 19)} UTC` : "Checking"}
-          </span>
-          <span className="shrink-0 tabular-nums">Next hour {fmtClock(clock + HOUR)}</span>
-          <span className="shrink-0 tabular-nums">4H {fmtClock(next4h)}</span>
-          <span className="shrink-0 tabular-nums">Daily {fmtClock(nextDay)}</span>
-          <span className="shrink-0">Sunday {fmtWhen(nextSun).slice(0, 11)}</span>
+          {book.now > 0 ? (
+            <>
+              <span className="shrink-0 tabular-nums text-ink">{fmtWhen(book.now)}</span>
+              <span className="shrink-0 tabular-nums">
+                {checkedAt ? `Checked ${new Date(checkedAt).toISOString().slice(11, 19)} UTC` : "Checking"}
+              </span>
+              <span className="shrink-0 tabular-nums">Next hour {fmtClock(clock + HOUR)}</span>
+              <span className="shrink-0 tabular-nums">4H {fmtClock(next4h)}</span>
+              <span className="shrink-0 tabular-nums">Daily {fmtClock(nextDay)}</span>
+              <span className="shrink-0">Sunday {fmtWhen(nextSun).slice(0, 11)}</span>
+            </>
+          ) : (
+            <span className="shrink-0">Reading the exchange.</span>
+          )}
         </div>
       </header>
 
