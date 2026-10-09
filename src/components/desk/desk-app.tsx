@@ -197,7 +197,7 @@ export function DeskApp() {
               ? feedNote
               : feed === "loading"
                 ? "Reading Coinbase."
-                : "On its own, every hour, even if this phone is off. Still paper. It cannot send an order to an exchange."}
+                : "Wakes once each morning, walks every hour of the night, and fills by itself. Still paper. It cannot send an order to an exchange."}
           </p>
         </div>
       </footer>
