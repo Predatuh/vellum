@@ -63,6 +63,11 @@ export function DeskApp() {
   }, []);
 
   useEffect(() => {
+    if (!("serviceWorker" in navigator)) return;
+    void navigator.serviceWorker.register("/sw.js");
+  }, []);
+
+  useEffect(() => {
     if (typeof Notification === "undefined") setPerm("unsupported");
     else setPerm(Notification.permission);
   }, [feed, alert?.id]);
