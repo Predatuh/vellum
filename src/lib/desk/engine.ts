@@ -581,6 +581,24 @@ export function catchUp(book: Book, target: number): Book {
   return next;
 }
 
+export function runAuto(book: Book, target: number): Book {
+  const aligned = book.now > 0 && target >= book.now && target - book.now <= 72 * HOUR;
+  let next = aligned ? book : openLive(target);
+  for (let guard = 0; guard < 240; guard++) {
+    const alert = topAlert(next.alerts);
+    if (alert) {
+      const choice = alert.kind === "GATE" ? "TAKEN" : alert.kind === "EXIT" ? "CLOSED" : "HOLD";
+      next = answer(next, alert.id, choice);
+      continue;
+    }
+    if (next.now + HOUR > target) return next;
+    const stepped = stepHour(next);
+    if (stepped.now === next.now) return next;
+    next = stepped;
+  }
+  return next;
+}
+
 export function stepHour(book: Book): Book {
   if (book.alerts.length > 0) return book;
   const now = book.now + HOUR;

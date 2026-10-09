@@ -28,11 +28,8 @@ async function page(product: string, startSec: number, endSec: number): Promise<
   }));
 }
 
-export const fetchKlines = createServerFn({ method: "POST" })
-  .inputValidator((input: { recent?: boolean }) => ({ recent: Boolean(input?.recent) }))
-  .handler(async ({ data }) => {
+export async function loadCandles(recent: boolean): Promise<{ candles: Record<SymbolId, Candle[]>; asOf: number }> {
   const end = Math.floor(Date.now() / 1000);
-  const recent = data.recent;
   const mid = end - 299 * 3600;
   const start = recent ? end - 8 * 3600 : mid - 299 * 3600;
   const candles = {} as Record<SymbolId, Candle[]>;
@@ -59,4 +56,8 @@ export const fetchKlines = createServerFn({ method: "POST" })
   await Promise.all(workers);
   const asOf = Math.min(...COINS.map((coin) => candles[coin]![candles[coin]!.length - 1]!.t + HOUR));
   return { candles, asOf };
-  });
+}
+
+export const fetchKlines = createServerFn({ method: "POST" })
+  .inputValidator((input: { recent?: boolean }) => ({ recent: Boolean(input?.recent) }))
+  .handler(async ({ data }) => loadCandles(data.recent));

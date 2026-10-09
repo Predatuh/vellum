@@ -114,7 +114,7 @@ export function DeskApp() {
         <div className="mx-auto flex max-w-6xl flex-wrap items-end justify-between gap-4 px-4 py-4 sm:px-6">
           <div>
             <p className="font-display text-3xl leading-none tracking-tight">Vellum</p>
-            <p className="mt-1 text-xs text-muted">Live Coinbase hours. You only answer a slip.</p>
+            <p className="mt-1 text-xs text-muted">It sells and buys by itself. You do not have to be here.</p>
           </div>
           <div className="text-right">
             <p className="text-xs uppercase tracking-wide text-muted">Paper balance</p>
@@ -197,7 +197,7 @@ export function DeskApp() {
               ? feedNote
               : feed === "loading"
                 ? "Reading Coinbase."
-                : `Live. Checks every 3 seconds. Install it on your home screen. It never sends an order.`}
+                : "On its own, every hour, even if this phone is off. Still paper. It cannot send an order to an exchange."}
           </p>
         </div>
       </footer>
@@ -223,7 +223,9 @@ function LiveSlip({ book, feed, feedNote }: { book: Book; feed: "loading" | "liv
           ? feedNote
           : feed === "loading"
             ? "Reading the last closed hours from Coinbase."
-            : "Nothing is due on this closed hour. The desk checks again on its own. A short or an exit shows up here, and on your phone if alerts are on."}
+            : book.tape.length
+              ? `Working on its own. ${book.tape[book.tape.length - 1]!.text}`
+              : "Working on its own. No fill on this hour."}
       </p>
     );
   }

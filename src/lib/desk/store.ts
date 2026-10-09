@@ -1,8 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { answer, blankBook, catchUp, openLive, setRealBalance } from "./engine";
+import { answer, blankBook, setRealBalance } from "./engine";
+import { tickDesk } from "./tick";
 import { fetchKlines } from "./live";
-import { HOUR } from "./market";
 import { candleTape, setCandleTape } from "./tape";
 import type { Book, Candle, Seat, SymbolId } from "./types";
 
@@ -84,9 +84,7 @@ export const useDesk = create<DeskStore>()(
           const live = await fetchKlines({ data: { recent: primed } });
           setCandleTape(primed ? mergeTape(live.candles) : live.candles);
           primed = true;
-          const current = get().book;
-          const aligned = current.now > 0 && Math.abs(live.asOf - current.now) <= 72 * HOUR;
-          const book = aligned ? catchUp(current, live.asOf) : openLive(live.asOf);
+          const book = await tickDesk();
           set({ book, feed: "live", feedNote: "", checkedAt: Date.now() });
           announce(book);
         } catch {
@@ -115,8 +113,8 @@ export const useDesk = create<DeskStore>()(
       partialize: (state) => ({ book: state.book, seat: state.seat, v: TAPE_VERSION }),
       merge: (persisted, current) => {
         const saved = persisted as Persisted;
-        if (!saved || saved.v !== TAPE_VERSION || !saved.book || saved.book.now <= 0) return current;
-        return { ...current, book: saved.book, seat: saved.seat ?? current.seat };
+        if (!saved || !saved.seat) return current;
+        return { ...current, seat: saved.seat };
       },
     },
   ),

@@ -10,7 +10,7 @@ export const RULES = {
   staleBandR: 0.25,
   feeBps: 4,
   slipBps: 2,
-  startingBalance: 10_000,
+  startingBalance: 100,
   minGap: 0.004,
   thresholds: {
     trades: 40,
