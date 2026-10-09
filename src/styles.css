@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+@theme {
+  --color-desk: #07090d;
+  --color-paper: #10151c;
+  --color-ink: #e7edf5;
+  --color-muted: #8b97a8;
+  --color-copper: #ff6b3d;
+  --font-display: "Outfit", "Avenir Next", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background: var(--color-desk);
+    color: var(--color-ink);
+    font-family: var(--font-mono);
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-copper);
+    outline-offset: 2px;
+  }
+
+  .font-display {
+    font-weight: 600;
+    letter-spacing: -0.03em;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+}
+
+.desk-wait {
+  animation: desk-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes desk-pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.hour-run {
+  transform-origin: left center;
+  animation: hour-run 1s linear infinite;
+}
+
+@keyframes hour-run {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.slip-in {
+  animation: slip-in 220ms ease-out;
+}
+
+@keyframes slip-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .desk-wait,
+  .hour-run,
+  .slip-in {
+    animation: none;
+  }
+}
