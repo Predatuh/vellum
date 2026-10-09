@@ -3,6 +3,8 @@ node_modules
 .grok
 screenshots
 artifacts
+attachments
+.project_id
 dist
 .tanstack
 *.log
